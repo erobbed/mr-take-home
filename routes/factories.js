@@ -1,19 +1,19 @@
 const express = require('express');
-const factoryStore = require('json-fs-store')('store/companies');
+const store = require('json-fs-store')('store/companies');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    factoryStore.list((err, factories) => {
+    store.list((err, factories) => {
         if (err) throw err;
-
-        res.json(factories);
+        let onlyFactories = factories.filter( factory => factory.company_type === 'factory')
+        res.json(onlyFactories);
     });
 });
 
 router.get('/search', (req, res) => {
     const searchQuery = req.query.q;
     /* Complete this function */
-    factoryStore.list( (err, factories) => {
+    store.list( (err, factories) => {
       let factory = factories.filter( f => f.name === searchQuery )[0]
       if (factory){
         res.json(factory)
@@ -24,7 +24,7 @@ router.get('/search', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-    factoryStore.load(req.params.id, (err, factory) => {
+    store.load(req.params.id, (err, factory) => {
         if (err) throw err;
         res.json(factory);
     });
@@ -39,9 +39,10 @@ router.post('/', (req, res) => {
       email: req.body.email,
       phone_number: req.body.phone_number,
       city: req.body.city,
-      state: req.body.state
+      state: req.body.state,
+      company_type: 'factory'
     };
-    factoryStore.add(newFactory, err => {
+    store.add(newFactory, err => {
         if (err) throw err;
         res.json(newFactory);
     });

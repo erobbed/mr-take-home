@@ -1,12 +1,12 @@
 const express = require('express');
-const brandStore = require('json-fs-store')('store/companies');
+const store = require('json-fs-store')('store/companies');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    brandStore.list((err, brands) => {
+    store.list((err, brands) => {
         if (err) throw err;
-
-        res.json(brands);
+        let onlyBrands = brands.filter( brand => brand.company_type === 'brand')
+        res.json(onlyBrands);
     });
 });
 
@@ -18,9 +18,10 @@ router.post('/', (req, res) => {
       email: req.body.email,
       phone_number: req.body.phone_number,
       city: req.body.city,
-      state: req.body.state
+      state: req.body.state,
+      company_type: 'brand'
     };
-    brandStore.add(newBrand, err => {
+    store.add(newBrand, err => {
         if (err) throw err;
         res.json(newBrand);
     });
