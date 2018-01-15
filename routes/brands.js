@@ -2,6 +2,14 @@ const express = require('express');
 const brandStore = require('json-fs-store')('store/companies');
 const router = express.Router();
 
+router.get('/', (req, res) => {
+    brandStore.list((err, brands) => {
+        if (err) throw err;
+
+        res.json(brands);
+    });
+});
+
 router.post('/', (req, res) => {
     if (!req.body) return res.sendStatus(400);
 
