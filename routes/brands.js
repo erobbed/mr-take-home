@@ -3,10 +3,23 @@ const store = require('json-fs-store')('store/companies');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    store.list((err, brands) => {
+    store.list((err, companies) => {
         if (err) throw err;
-        let onlyBrands = brands.filter( brand => brand.company_type === 'brand')
+        let onlyBrands = companies.filter( c => c.company_type === 'brand')
         res.json(onlyBrands);
+    });
+});
+
+router.get('/search', (req, res) => {
+    const searchQuery = req.query.q;
+    /* Complete this function */
+    store.list( (err, companies) => {
+      let factory = companies.filter( c => c.name === searchQuery && c.company_type === 'brand' )[0]
+      if (factory){
+        res.json(factory)
+      } else {
+        res.sendStatus(404);
+      }
     });
 });
 

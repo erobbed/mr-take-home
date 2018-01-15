@@ -3,9 +3,9 @@ const store = require('json-fs-store')('store/companies');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    store.list((err, factories) => {
+    store.list((err, companies) => {
         if (err) throw err;
-        let onlyFactories = factories.filter( factory => factory.company_type === 'factory')
+        let onlyFactories = companies.filter( c => c.company_type === 'factory')
         res.json(onlyFactories);
     });
 });
@@ -13,8 +13,8 @@ router.get('/', (req, res) => {
 router.get('/search', (req, res) => {
     const searchQuery = req.query.q;
     /* Complete this function */
-    store.list( (err, factories) => {
-      let factory = factories.filter( f => f.name === searchQuery )[0]
+    store.list( (err, companies) => {
+      let factory = companies.filter( c => c.name === searchQuery && c.company_type === 'factory' )[0]
       if (factory){
         res.json(factory)
       } else {
