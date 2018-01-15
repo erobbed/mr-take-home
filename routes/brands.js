@@ -14,9 +14,11 @@ router.get('/search', (req, res) => {
     const searchQuery = req.query.q;
     /* Complete this function */
     store.list( (err, companies) => {
-      let factory = companies.filter( c => c.name === searchQuery && c.company_type === 'brand' )[0]
-      if (factory){
-        res.json(factory)
+      let brand = companies.filter( c => c.name === searchQuery && c.company_type === 'brand' )[0]
+      if (brand){
+        res.json(brand)
+      } else if ( companies.filter( c => c.name === searchQuery)[0].company_type === 'factory') {
+        res.send(`Sorry but ${searchQuery} is not a brand.\n${searchQuery} is a factory.\nPlease try the factory search.`)
       } else {
         res.sendStatus(404);
       }

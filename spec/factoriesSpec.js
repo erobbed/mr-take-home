@@ -16,6 +16,15 @@ describe('Factories', () => {
             .end((err, res) => {
                 if (err) return done.fail(err);
                 expect(res.body.length).toBeGreaterThan(0);
+
+                res.body.forEach( company => {
+                  expect(company).toEqual(jasmine.objectContaining({
+                      company_type: "factory"
+                    }));
+                  expect(company).not.toEqual(jasmine.objectContaining({
+                    company_type: 'brand'
+                  }));
+                })
                 done(res);
             });
     });
@@ -50,12 +59,15 @@ describe('Factories', () => {
     });
 
     it('finds an existing factory', done => {
+        let searchQuery = "The Pattern Makers"
         request(app)
-            .get('/factories/search?q=The Pattern Makers')
+            .get(`/factories/search?q=${searchQuery}`)
             .expect(200)
             .end((err, res) => {
                 if (err) return done.fail(err);
                 expect(res.body).not.toBeNull();
+                expect(res.body.name).toEqual(searchQuery)
+                expect(200);
                 done(res);
             });
     });
