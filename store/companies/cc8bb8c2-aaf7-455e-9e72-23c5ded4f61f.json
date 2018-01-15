@@ -1,0 +1,8 @@
+{
+  "name": "Test Brand",
+  "email": "example@example.com",
+  "phone_number": "212-888-8888",
+  "city": "Brooklyn",
+  "state": "NY",
+  "company_type": "brand"
+}

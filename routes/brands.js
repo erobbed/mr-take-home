@@ -12,16 +12,23 @@ router.get('/', (req, res) => {
 
 router.get('/search', (req, res) => {
     const searchQuery = req.query.q;
-    /* Complete this function */
+
     store.list( (err, companies) => {
-      let brand = companies.filter( c => c.name === searchQuery && c.company_type === 'brand' )[0]
-      if (brand){
-        res.json(brand)
-      } else if ( companies.filter( c => c.name === searchQuery)[0].company_type === 'factory') {
+      let result = companies.filter( c => c.name === searchQuery )[0]
+      if (result && result.company_type === 'brand'){
+        res.json(result)
+      } else if (result && result.company_type === 'factory'){
         res.send(`Sorry but ${searchQuery} is not a brand.\n${searchQuery} is a factory.\nPlease try the factory search.`)
       } else {
         res.sendStatus(404);
       }
+    });
+});
+
+router.get('/:id', (req, res) => {
+    store.load(req.params.id, (err, brand) => {
+        if (err) throw err;
+        res.json(brand);
     });
 });
 

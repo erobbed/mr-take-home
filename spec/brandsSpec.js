@@ -1,6 +1,6 @@
 const request = require('supertest');
 
-describe('Factories', () => {
+describe('Brands', () => {
     let app;
     beforeEach(() => {
         app = require('../app.js');
@@ -9,9 +9,9 @@ describe('Factories', () => {
         app.close();
     });
 
-    it('gets all factories', done => {
+    it('gets all brands', done => {
         request(app)
-            .get('/factories')
+            .get('/brands')
             .expect(200)
             .end((err, res) => {
                 if (err) return done.fail(err);
@@ -19,19 +19,19 @@ describe('Factories', () => {
 
                 res.body.forEach( company => {
                   expect(company).toEqual(jasmine.objectContaining({
-                      company_type: "factory"
+                      company_type: 'brand'
                     }));
                   expect(company).not.toEqual(jasmine.objectContaining({
-                    company_type: 'brand'
+                    company_type: 'factory'
                   }));
                 })
                 done(res);
             });
     });
 
-    it('gets a single factory', done => {
+    it('gets a single brand', done => {
         request(app)
-            .get('/factories/0a75d3f4-c8ff-47bb-84c3-a874007d1b4f') // admittedly, this is an ugly id.
+            .get('/brands/44763ebb-032c-4ba7-b3b4-2e2cc1b2fff3')
             .expect(200)
             .end((err, res) => {
                 if (err) return done.fail(err);
@@ -40,28 +40,28 @@ describe('Factories', () => {
             });
     });
 
-    it('creates a new factory', done => {
+    it('creates a new brand', done => {
         request(app)
-            .post('/factories')
-            .send({ name: 'Test Factory', email: 'example@example.com', city: 'New York', state: 'NY', phone_number: '212-555-5555', company_type: 'factory' })
+            .post('/brands')
+            .send({ name: 'Test Brand', email: 'example@example.com', city: 'Brooklyn', state: 'NY', phone_number: '212-888-8888', company_type: 'brand' })
             .expect(200)
             .end((err, res) => {
                 if (err) return done.fail(err);
-                expect(res.body.name).toEqual('Test Factory');
+                expect(res.body.name).toEqual('Test Brand');
                 expect(res.body.email).toEqual('example@example.com');
-                expect(res.body.city).toEqual('New York');
+                expect(res.body.city).toEqual('Brooklyn');
                 expect(res.body.state).toEqual('NY');
-                expect(res.body.phone_number).toEqual('212-555-5555');
-                expect(res.body.company_type).toEqual('factory');
+                expect(res.body.phone_number).toEqual('212-888-8888');
+                expect(res.body.company_type).toEqual('brand');
 
                 done(res);
             });
     });
 
-    it('finds an existing factory', done => {
-        let searchQuery = "The Pattern Makers";
+    it('finds an existing brand', done => {
+        let searchQuery = "DNA Group";
         request(app)
-            .get(`/factories/search?q=${searchQuery}`)
+            .get(`/brands/search?q=${searchQuery}`)
             .expect(200)
             .end((err, res) => {
                 if (err) return done.fail(err);
@@ -72,23 +72,23 @@ describe('Factories', () => {
             });
     });
 
-    it('redirects query when searching for a brand', done => {
-      let searchQuery = "DNA Group";
+    it('redirects query when searching for a factory', done => {
+      let searchQuery = "Polt Design";
       request(app)
-          .get(`/factories/search?q=${searchQuery}`)
+          .get(`/brands/search?q=${searchQuery}`)
           .expect(200)
           .end((err, res) => {
               if (err) return done.fail(err);
               expect(res.body).not.toBeNull();
-              expect(res.text).toMatch(`Sorry but ${searchQuery} is not a factory.\n${searchQuery} is a brand.\nPlease try the brand search.`)
+              expect(res.text).toMatch(`Sorry but ${searchQuery} is not a brand.\n${searchQuery} is a factory.\nPlease try the factory search.`)
               expect(200);
               done(res);
           });
     });
 
-    it('returns 404 when it can\'t find a factory', done => {
+    it('returns 404 when it can\'t find a brand', done => {
         request(app)
-            .get('/factories/search?q=foo bar')
+            .get('/brands/search?q=foo bar')
             .expect(404)
             .end((err, res) => {
                 if (err) return done.fail(err);
