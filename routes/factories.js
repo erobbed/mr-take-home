@@ -13,6 +13,7 @@ router.get('/', (req, res) => {
 router.get('/search', (req, res) => {
     const searchQuery = req.query.q;
     /* Complete this function */
+    
 });
 
 router.get('/:id', (req, res) => {
@@ -25,7 +26,13 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
     if (!req.body) return res.sendStatus(400);
 
-    const newFactory = { name: req.body.name };
+    const newFactory = {
+      name: req.body.name,
+      email: req.body.email,
+      phone_number: req.body.phone_number,
+      city: req.body.city,
+      state: req.body.state
+    };
     factoryStore.add(newFactory, err => {
         if (err) throw err;
         res.json(newFactory);
