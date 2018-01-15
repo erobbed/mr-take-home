@@ -13,7 +13,14 @@ router.get('/', (req, res) => {
 router.get('/search', (req, res) => {
     const searchQuery = req.query.q;
     /* Complete this function */
-    
+    factoryStore.list( (err, factories) => {
+      let factory = factories.filter( f => f.name === searchQuery )[0]
+      if (factory){
+        res.json(factory)
+      } else {
+        res.sendStatus(404);
+      }
+    });
 });
 
 router.get('/:id', (req, res) => {
@@ -26,6 +33,7 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
     if (!req.body) return res.sendStatus(400);
 
+    //added new factory fields
     const newFactory = {
       name: req.body.name,
       email: req.body.email,
