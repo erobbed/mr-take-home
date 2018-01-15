@@ -34,11 +34,15 @@ describe('Factories', () => {
     it('creates a new factory', done => {
         request(app)
             .post('/factories')
-            .send({ name: 'Test Factory' })
+            .send({ name: 'Test Factory', email: 'example@example.com', city: 'New York', state: 'NY', phone_number: '212-555-5555' })
             .expect(200)
             .end((err, res) => {
                 if (err) return done.fail(err);
                 expect(res.body.name).toEqual('Test Factory');
+                expect(res.body.email).toEqual('example@example.com');
+                expect(res.body.city).toEqual('New York');
+                expect(res.body.state).toEqual('NY');
+                expect(res.body.phone_number).toEqual('212-555-5555');
 
                 done(res);
             });
