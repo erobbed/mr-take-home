@@ -43,7 +43,7 @@ describe('Factories', () => {
     it('creates a new factory', done => {
         request(app)
             .post('/factories')
-            .send({ name: 'Test Factory', email: 'example@example.com', city: 'New York', state: 'NY', phone_number: '212-555-5555', company_type: 'factory' })
+            .send({ name: 'Test Factory', email: 'example@example.com', city: 'New York', state: 'NY', phone_number: '212-555-5555', company_type: 'factory', id: '12345' })
             .expect(200)
             .end((err, res) => {
                 if (err) return done.fail(err);
@@ -53,6 +53,7 @@ describe('Factories', () => {
                 expect(res.body.state).toEqual('NY');
                 expect(res.body.phone_number).toEqual('212-555-5555');
                 expect(res.body.company_type).toEqual('factory');
+                expect(res.body.id).toEqual('12345')
 
                 done(res);
             });
@@ -92,6 +93,41 @@ describe('Factories', () => {
             .expect(404)
             .end((err, res) => {
                 if (err) return done.fail(err);
+                done(res);
+            });
+    });
+
+
+    it('updates a factory', done => {
+      let id = '12345'
+      request(app)
+        .patch(`/brands/${id}`)
+        .send({path: "/city" , value: "Chappaqua"})
+        .expect(200)
+        .end( (err, res) => {
+          if (err) return done.fail(err);
+          expect(res.body.city).toEqual('Chappaqua');
+          done(res);
+        });
+    });
+
+
+
+    it('deletes a factory', done => {
+        let id = '12345'
+        request(app)
+            .delete(`/factories/${id}`)
+            .end((err, res) => {
+                if (err) return done.fail(err);
+                expect(200);
+            });
+
+        request(app)
+            .get(`/factories/${id}`)
+            .expect(200)
+            .end((err, res) => {
+                if (err) return done.fail(err);
+                expect(res.body).not.toBeNull();
                 done(res);
             });
     });

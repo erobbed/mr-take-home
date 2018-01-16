@@ -43,7 +43,7 @@ describe('Brands', () => {
     it('creates a new brand', done => {
         request(app)
             .post('/brands')
-            .send({ name: 'Test Brand', email: 'example@example.com', city: 'Brooklyn', state: 'NY', phone_number: '212-888-8888', company_type: 'brand' })
+            .send({ name: 'Test Brand', email: 'example@example.com', city: 'Brooklyn', state: 'NY', phone_number: '212-888-8888', company_type: 'brand', id: '67890' })
             .expect(200)
             .end((err, res) => {
                 if (err) return done.fail(err);
@@ -53,6 +53,7 @@ describe('Brands', () => {
                 expect(res.body.state).toEqual('NY');
                 expect(res.body.phone_number).toEqual('212-888-8888');
                 expect(res.body.company_type).toEqual('brand');
+                expect(res.body.id).toEqual('67890')
 
                 done(res);
             });
@@ -92,6 +93,42 @@ describe('Brands', () => {
             .expect(404)
             .end((err, res) => {
                 if (err) return done.fail(err);
+                done(res);
+            });
+    });
+
+
+
+    it('updates a brand', done => {
+      let id = '67890'
+      request(app)
+        .patch(`/brands/${id}`)
+        .send({path: "/city" , value: "Queens"})
+        .expect(200)
+        .end( (err, res) => {
+          if (err) return done.fail(err);
+          expect(res.body.city).toEqual('Queens');
+          done(res);
+        });
+    });
+
+
+
+    it('deletes a brand', done => {
+        let id = '67890'
+        request(app)
+            .delete(`/brands/${id}`)
+            .end((err, res) => {
+                if (err) return done.fail(err);
+                expect(200);
+            });
+
+        request(app)
+            .get(`/brands/${id}`)
+            .expect(200)
+            .end((err, res) => {
+                if (err) return done.fail(err);
+                expect(res.body).not.toBeNull();
                 done(res);
             });
     });

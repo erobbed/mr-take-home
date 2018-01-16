@@ -44,10 +44,48 @@ router.post('/', (req, res) => {
       state: req.body.state,
       company_type: 'factory'
     };
+
+    if(req.body.id){
+      newFactory.id = req.body.id
+    }
+
     store.add(newFactory, err => {
         if (err) throw err;
         res.json(newFactory);
     });
+});
+
+router.delete('/:id', (req, res) => {
+
+    const company = req.params.id;
+    store.remove(company, err => {
+        if (err) throw err;
+        res.sendStatus(200);
+    });
+});
+
+router.patch('/:id', (req, res) => {
+
+  const company = req.params.id;
+  let path = req.params.path;
+  let value = req.params.value;
+
+  patch = [
+    {op: "replace", path: req.body.path, value: req.body.value},
+    {op: "add", path: '/id', "value": company }
+  ]
+
+  store.load(company, (err, factory) => {
+      if (err) throw err;
+      let newFactory = jsonpatch.apply_patch(factory, patch)
+      store.remove(company, err => {
+        if (err) throw err;
+        store.add(newFactory, err => {
+          if (err) throw err;
+          res.json(newFactory)
+        });
+      });  
+  });
 });
 
 module.exports = router;
