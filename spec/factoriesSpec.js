@@ -137,8 +137,8 @@ describe("Factories", () => {
 
     request(app)
       .delete(`/factories/${id}`)
+      .expect(200)
       .then(res => {
-        expect(200);
         expect(res.text).toMatch(`Deleted item ${id}`);
       })
       .then(() => {
