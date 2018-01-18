@@ -121,14 +121,7 @@ describe('Brands', () => {
         .end((err, res) => {
           if (err) return done.fail(err);
           expect(200);
-        });
-
-      request(app)
-        .get(`/brands/${id}`)
-        .expect(200)
-        .end((err, res) => {
-          if (err) return done.fail(err);
-          expect(res.body).not.toBeNull();
+          expect(res.text).toMatch(`Deleted item ${id}`)
           done(res);
         });
     });

@@ -60,7 +60,7 @@ router.delete('/:id', (req, res) => {
     const company = req.params.id;
     store.remove(company, err => {
         if (err) throw err;
-        res.sendStatus(200);
+        res.send(`Deleted item ${company}`)
     });
 });
 
@@ -84,7 +84,7 @@ router.patch('/:id', (req, res) => {
           if (err) throw err;
           res.json(newFactory)
         });
-      });  
+      });
   });
 });
 

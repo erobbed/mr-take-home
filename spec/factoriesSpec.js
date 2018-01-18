@@ -120,15 +120,8 @@ describe('Factories', () => {
         .end((err, res) => {
           if (err) return done.fail(err);
           expect(200);
-        });
-
-      request(app)
-        .get(`/factories/${id}`)
-        .expect(200)
-        .end((err, res) => {
-          if (err) return done.fail(err);
-          expect(res.body).not.toBeNull();
-          done(res);
+          expect(res.text).toMatch(`Deleted item ${id}`)
+          done(res)
         });
     });
 });
