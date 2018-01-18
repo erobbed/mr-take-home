@@ -126,13 +126,23 @@ describe("Brands", () => {
 
   it("deletes a brand", done => {
     let id = "67890";
+    const check = i => {
+      request(app)
+        .get(`/brands/${i}`)
+        .end((err, res) => {
+          expect(res.statusCode).toEqual(404);
+          done(res);
+        });
+    };
+
     request(app)
       .delete(`/brands/${id}`)
-      .end((err, res) => {
-        if (err) return done.fail(err);
+      .then(res => {
         expect(200);
         expect(res.text).toMatch(`Deleted item ${id}`);
-        done(res);
+      })
+      .then(() => {
+        check(id);
       });
   });
 });

@@ -29,7 +29,7 @@ router.get("/search", (req, res) => {
 
 router.get("/:id", (req, res) => {
   store.load(req.params.id, (err, brand) => {
-    if (err) throw err;
+    if (err) res.sendStatus(404);
     res.json(brand);
   });
 });

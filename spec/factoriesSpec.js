@@ -124,15 +124,25 @@ describe("Factories", () => {
       });
   });
 
-  it("deletes a factory", done => {
+  it("deletes a factory and confirms it is not in the database", done => {
     let id = "12345";
+    const check = i => {
+      request(app)
+        .get(`/factories/${i}`)
+        .end((err, res) => {
+          expect(res.statusCode).toEqual(404);
+          done(res);
+        });
+    };
+
     request(app)
       .delete(`/factories/${id}`)
-      .end((err, res) => {
-        if (err) return done.fail(err);
+      .then(res => {
         expect(200);
         expect(res.text).toMatch(`Deleted item ${id}`);
-        done(res);
+      })
+      .then(() => {
+        check(id);
       });
   });
 });
