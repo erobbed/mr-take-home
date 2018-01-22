@@ -19,7 +19,8 @@ router.get("/search", (req, res) => {
       res.json(result);
     } else if (result && result.company_type === "factory") {
       res.send(
-        `Sorry but ${searchQuery} is not a brand.\n${searchQuery} is a factory.\nPlease try the factory search.`
+        `Sorry but ${searchQuery} is not a brand.\n${searchQuery} is a factory.\nPlease try the factory search.`,
+        404
       );
     } else {
       res.sendStatus(404);

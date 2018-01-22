@@ -89,14 +89,14 @@ describe("Factories", () => {
     let searchQuery = "DNA Group";
     request(app)
       .get(`/factories/search?q=${searchQuery}`)
-      .expect(200)
+      .expect(404)
       .end((err, res) => {
         if (err) return done.fail(err);
         expect(res.body).not.toBeNull();
         expect(res.text).toMatch(
           `Sorry but ${searchQuery} is not a factory.\n${searchQuery} is a brand.\nPlease try the brand search.`
         );
-        expect(200);
+        expect(404);
         done(res);
       });
   });

@@ -80,7 +80,7 @@ describe("Brands", () => {
         if (err) return done.fail(err);
         expect(res.body).not.toBeNull();
         expect(res.body.name).toEqual(searchQuery);
-        expect(200);
+        expect(404);
         done(res);
       });
   });
@@ -89,14 +89,14 @@ describe("Brands", () => {
     let searchQuery = "Polt Design";
     request(app)
       .get(`/brands/search?q=${searchQuery}`)
-      .expect(200)
+      .expect(404)
       .end((err, res) => {
         if (err) return done.fail(err);
         expect(res.body).not.toBeNull();
         expect(res.text).toMatch(
           `Sorry but ${searchQuery} is not a brand.\n${searchQuery} is a factory.\nPlease try the factory search.`
         );
-        expect(200);
+        expect(404);
         done(res);
       });
   });
